@@ -25,6 +25,41 @@ add_action( 'wp_ajax_nopriv_subscribe_list', 'sc_subscribe_list' );
 /** DICCIONARI MULTILINGÜE */
 add_action( 'wp_ajax_multilingue_search', 'sc_multilingue_search' );
 add_action( 'wp_ajax_nopriv_multilingue_search', 'sc_multilingue_search' );
+/** ADAPTADOR */
+add_action( 'wp_ajax_adaptador_form', 'sc_adaptador_form' );
+add_action( 'wp_ajax_nopriv_adaptador_form', 'sc_adaptador_form' );
+
+/**
+ * Creates a new post of the type 'aparell' using the data sent from the form ($_POST)
+ *
+ * @return json response
+ */
+function sc_adaptador_form() {
+    $return = array();
+    if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $_POST["action"] )) {
+        $return['status'] = 0;
+    } else {
+        check_is_ajax_call();
+
+        if( isset( $_FILES['fitxer_po'] ) ) {
+            $tmpfile = $_FILES['fitxer_po'];
+
+            $upload_overrides = array('test_form' => false);
+            $uploaded = wp_handle_upload( $tmpfile, $upload_overrides );
+
+            if( $uploaded['type'] == 'text/plain') {
+                $result_file = str_replace( '.ini', '-valencia.ini', $uploaded['file']);
+                $result_url = str_replace( '.ini', '-valencia.ini', $uploaded['url']);
+                $result = shell_exec('../../../adaptadorvariants/tools/src2valencia-ini.sed < ' . $uploaded['file'] . ' > ' . $result_file);
+                $return['adapted_file_url'] = $result_url;
+            }
+        }
+
+    }
+
+    $response = json_encode( $return );
+    die( $response );
+}
 
 /**
  * Retrieves the results from the Multilingüe API server given a word + language

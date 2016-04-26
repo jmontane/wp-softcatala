@@ -1,0 +1,80 @@
+{% extends "base.twig" %}
+
+{% block content %}
+	<!-- .main .wrap-blanc -->
+	<main class="main wrap-blanc cd-main-content">
+		<!-- .main-header -->
+		{% include "contingut-header.twig" %}
+		<!--/.main-header -->
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<!-- .contingut -->
+				<div class="contingut contingut-left col-sm-9">
+					<!-- .contingut-header -->
+					<header class="contingut-header">
+						<p>{{  post.post_excerpt }}</p>
+					</header>
+					<!--/.contingut-header -->
+
+					<!-- section paragraf -->
+					<section class="contingut-section">{{  post.content }}
+
+                        <div class="formulari">
+
+                          <section class="contingut-section" id="contingut-formulari-response" style="display:none">
+							  <span id="message_response">Gràcies per posar-vos en contacte amb nosaltres. Us contactarem aviat.<br/><br/></span>
+
+							  <a class="bt-basic bt-basic-vermell" style="color: #FFFFFF" href="/" title="Pàgina d'inici de Softcatalà">Continueu navegant pel web...</a>
+                          </section>
+
+                          <!-- section -->
+                          <section class="contingut-section" id="contingut-formulari">
+                            <form class="form-horizontal" id="adaptador_form" method="post">
+                              <!-- camp -->
+                              <div class="form-group">
+                                  <label class="col-sm-3 control-label">Fitxer po</label>
+                                  <div class="col-sm-9 col-md-6">
+                                      <div class="row">
+                                          <div class="col-xs-4 col-sm-4 bt-puja">
+                                              <div class="checkbox">
+                                                  <label>
+                                                      <input type="file" name="fitxer_po">
+                                                  </label>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div><!-- camp -->
+
+                              <!-- botons -->
+                              <div class="form-group">
+                                  <div class="col-sm-3"></div>
+                                  <div class="col-sm-9 form-botons">
+                                    <div class="row">
+                                   <div class="form-boto col-xs-5">
+                                     {{ function('wp_nonce_field', 'adaptador_form') }}
+                                     <button type="submit" class="bt-basic bt-basic-vermell-fosc">Envia</button>
+                                   </div>
+                                   </div>
+                                  </div>
+                              </div><!--/botons -->
+                            </form>
+                          </section><!--/ section -->
+                        </div><!--/.formulari -->
+                    </section>
+					<!--/ section paragraf -->
+
+				</div><!--/.contingut -->
+
+				{% include "sidebar.twig" %}
+			</div><!--/.row -->
+		</div><!--/.container-fluid -->
+	</main><!--/.main .wrap-blanc -->
+
+
+	<!-- .seccio-vermella -->
+	{% include "call-to-action-bottom.twig" %}
+	<!--/.seccio-vermella -->
+{% endblock %}

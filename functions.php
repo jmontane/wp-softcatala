@@ -984,3 +984,10 @@ function throw_service_error( $service, $message = '' ) {
 
     sendEmailForm( 'web@softcatala.org', $service, 'El servei «' . $service . '» no està funcionant correctament', $fields );
 }
+
+function sc_myme_types($mime_types){
+    $mime_types['po'] = 'text/x-gettext-translation';
+    $mime_types['ini'] = 'text/plain';
+    return $mime_types;
+}
+add_filter('upload_mimes', 'sc_myme_types', 1, 1);
