@@ -988,6 +988,8 @@ function throw_service_error( $service, $message = '' ) {
 function sc_myme_types($mime_types){
     $mime_types['po'] = 'text/x-gettext-translation';
     $mime_types['ini'] = 'text/plain';
+    $mime_types['zip'] = 'application/zip';
+
     return $mime_types;
 }
 add_filter('upload_mimes', 'sc_myme_types', 1, 1);

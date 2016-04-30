@@ -8,9 +8,9 @@ $adaptadorForm.on('submit', function(ev){
     var post_data = new FormData();
     post_data.append('action', 'adaptador_form');
     post_data.append('_wpnonce', jQuery('input[name=_wpnonce]').val());
-    var fitxer = jQuery(document).find('input[name="fitxer_po"]');
-    var fitxer_po = fitxer[0].files[0];
-    post_data.append("fitxer_po", fitxer_po);
+    var fitxer = jQuery(document).find('input[name="fitxer_unic"]');
+    var fitxer_unic = fitxer[0].files[0];
+    post_data.append("fitxer_unic", fitxer_unic);
 
     jQuery.ajax({
         type: 'POST',

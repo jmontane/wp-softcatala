@@ -41,20 +41,41 @@ function sc_adaptador_form() {
     } else {
         check_is_ajax_call();
 
-        if( isset( $_FILES['fitxer_po'] ) ) {
-            $tmpfile = $_FILES['fitxer_po'];
+        if( isset( $_FILES['fitxer_unic'] ) ) {
+            $tmpfile = $_FILES['fitxer_unic'];
 
             $upload_overrides = array('test_form' => false);
             $uploaded = wp_handle_upload( $tmpfile, $upload_overrides );
+            $script = '../../../adaptadorvariants/tools/adapta_arbre';
+            $script_sed = '../../../adaptadorvariants/tools/src2valencia.sed';
 
-            if( $uploaded['type'] == 'text/plain') {
-                $result_file = str_replace( '.ini', '-valencia.ini', $uploaded['file']);
-                $result_url = str_replace( '.ini', '-valencia.ini', $uploaded['url']);
-                $result = shell_exec('../../../adaptadorvariants/tools/src2valencia-ini.sed < ' . $uploaded['file'] . ' > ' . $result_file);
-                $return['adapted_file_url'] = $result_url;
+            if( $uploaded['type'] == 'text/plain' ) {
+                $script_sed = '../../../adaptadorvariants/tools/src2valencia-ini.sed';
+                $extension = '.ini';
+            } else if ( $uploaded['type'] == 'text/x-gettext-translation' ) {
+                $extension = '.po';
+            } else if ( $uploaded['type'] == 'application/zip' ) {
+                $dir = ABSPATH . UPLOADS;
+                $tmp_dir = $dir . '/adapt/'. time();
+                $tmp_dir_ca = $tmp_dir . '/ca/';
+                shell_exec( 'mkdir -p '. $tmp_dir_ca );
+                shell_exec( 'unzip ' . $uploaded['file'] . ' -d ' . $tmp_dir_ca );
+                shell_exec( $script . ' ' . $tmp_dir_ca . ' ' . $script_sed );
+                shell_exec( 'cd ' . $tmp_dir . ' && zip -r ' . $tmpfile['name'] . ' .' );
+
+                $zip_file = $tmp_dir . '/' . $tmpfile['name'];
+                $zip_url = str_replace( $dir, UPLOADS, $zip_file );
+                $return['adapted_file_url'] = $zip_url;
+
+                $response = json_encode( $return );
+                die( $response );
             }
-        }
 
+
+            $result_url = str_replace( $extension, '-valencia' . $extension, $uploaded['url']);
+            $result = shell_exec( $script_sed . ' < ' . $uploaded['file'] . ' > ' . $result_file);
+            $return['adapted_file_url'] = $result_url;
+        }
     }
 
     $response = json_encode( $return );
